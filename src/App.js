@@ -4,6 +4,8 @@ import React from "react";
 //import Potato from "./Potato";
 // 전달받은 props가 내가 원하는 props인지 체크해줌.
 import PropTypes from "prop-types";
+import axios from "axios";
+import Movie from "./Movie";
 
 // 컴포넌트는 Javascript object(array)를 props로 가져갈수 있당!
 // const foodILike = [
@@ -151,15 +153,39 @@ class App extends React.Component {
     movies: [],
   };
 
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({ isLoading: false });
-    }, 3000);
-  }
+  getMovies = async () => {
+    const {
+      data: {
+        data: { movies },
+      },
+    } = await axios.get("https://yts-proxy.now.sh/list_movies.json");
+    this.setState({ movies, isLoading: false });
+  };
 
+  componentDidMount() {
+    this.getMovies();
+  }
+  // map은 뭔가를 무조건 리턴 해야함.
   render() {
-    const { isLoading } = this.state;
-    return <div>{isLoading ? "Loading.." : "We are Ready"}</div>;
+    const { isLoading, movies } = this.state;
+    return (
+      <div>
+        {isLoading
+          ? "Loading.."
+          : movies.map((movie) => {
+              return (
+                <Movie
+                  key={movie.id}
+                  id={movie.id}
+                  year={movie.year}
+                  title={movie.title}
+                  summary={movie.summary}
+                  poster={movie.medium_cover_image}
+                />
+              );
+            })}
+      </div>
+    );
   }
 }
 
