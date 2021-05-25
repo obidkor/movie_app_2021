@@ -3,6 +3,9 @@ import React from "react";
 import { HashRouter, Route } from "react-router-dom";
 import About from "./routes/About";
 import Home from "./routes/Home";
+import Detail from "./routes/Detail";
+import Navigation from "./components/Navigation";
+import "./App.css";
 
 // Router만들꺼임 주소에 따라 렌더링할 컴포넌트 지정(네비게이션 바)
 // Route props에 path에 주소, component에 컴포넌트를 넣자
@@ -11,8 +14,10 @@ import Home from "./routes/Home";
 function App() {
   return (
     <HashRouter>
+      <Navigation />
       <Route path="/" exact={true} component={Home} />
       <Route path="/about" component={About} />
+      <Route path="/movie/:id" component={Detail} />
     </HashRouter>
   );
 }
